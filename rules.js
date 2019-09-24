@@ -12,37 +12,31 @@ const getTotalLiveAdjacents = (matrix, cellX, cellY) => {
   return sumAdjacents;
 };
 
-const evalRule3 = (matrix, i, j) => {
-  return true;
-};
-
-const evalRule2 = (matrix, i, j) => {
-  return true;
-};
-
-const evalRule1 = (matrix, i, j) => {
-  return true;
-};
-
 const evalCell = (matrix, i, j) => {
-  if (evalRule1()) {
-    return;
+  const totalLiveAdjacents = getTotalLiveAdjacents(matrix, i, j);
+  const isLive = Boolean(matrix[i][j]);
+  if(isLive){
+    const hasUnderpopulation = totalLiveAdjacents < 2;
+    const hasOverpopulation = totalLiveAdjacents > 3;
+    if (hasUnderpopulation || hasOverpopulation) {
+      return false;
+    }
+    return true;
   }
-  if (evalRule2()) {
-    return;
-  }
-  if (evalRule3()) {
-    return;
-  }
+  return totalLiveAdjacents === 3;
 };
 
-const nextGen = matrix => {
+const getNextGen = matrix => {
+  const nextMatrix = matrix.splice(0);
   for (let i = 0; i < matrix.length; i++) {
-    var matrixLength = matrix[i].length;
+    const matrixLength = matrix[i].length;
     for (let j = 0; j < matrixLength; j++) {
-      evalCell(matrix, i, j);
+      nextMatrix[i, j] = evalCell(matrix, i, j);
     }
   }
+  return nextMatrix;
+};
 
-  return matrix;
+module.exports = {
+  getNextGen
 };
